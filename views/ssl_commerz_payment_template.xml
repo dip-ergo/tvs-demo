@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="sslcommerz_form">
+            <div>
+                <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+                <input type="hidden" name="store_id" t-att-value="store_id"/>
+                <input type="hidden" name="store_passwd" t-att-value="store_passwd"/>
+                <input type="hidden" name="total_amount" t-att-value="total_amount" />
+                <input type="hidden" name="currency" t-att-value="currency"/>
+                <input type="hidden" name="tran_id" t-att-value="tran_id"/>
+                <input type="hidden" name="product_category" t-att-value="product_category"/>
+                <input t-if="success_url" type="hidden" name='success_url' t-att-value="success_url"/>
+                <input t-if="fail_url" type="hidden" name="fail_url" t-att-value="fail_url"/>
+                <input t-if="cancel_url" type="hidden" name="cancel_url" t-att-value="cancel_url"/>
+                <input t-if="ipn_url" type="hidden" name='ipn_url' t-att-value="ipn_url"/>
+                <input type="hidden" name="emi_option" t-att-value="emi_option"/>
+                <input type="hidden" name="cus_name" t-att-value="cus_name"/>
+
+                <!-- <input t-if="handling" type="hidden" name="handling"
+                    t-att-value="handling"/> -->
+
+                <input type="hidden" name="cus_email" t-att-value="cus_email"/>
+
+                <!-- partner / address data -->
+
+                <input type="hidden" name="cus_add1" t-att-value="cus_add1"/>
+                <input type="hidden" name="cus_city" t-att-value="cus_city"/>
+                <input type="hidden" name="cus_state" t-att-value="cus_state"/>
+                <input type="hidden" name="cus_postcode" t-att-value="cus_postcode"/>
+                <input type="hidden" name="cus_country" t-att-value="cus_country"/>
+                <input type="hidden" name="cus_phone" t-att-value="cus_phone"/>
+                <input type="hidden" name="shipping_method" t-att-value="shipping_method"/>
+                <input type="hidden" name="num_of_item" t-att-value="num_of_item"/>
+                <input type="hidden" name="product_name" t-att-value="product_name"/>
+                <input type="hidden" name="product_profile" t-att-value="product_profile"/>
+                
+                <!-- <input type="hidden" name="rm"
+                 value="2"/> -->
+                <!-- <input t-if='state' type="hidden" name="state"
+                    t-att-value='state'/> -->
+                <!-- after payment parameters -->
+                <!-- <input t-if='custom' type="hidden" name="custom"
+                    t-att-value='custom'/> -->
+                <!-- URLs -->
+                
+            </div>
+        </template>
+    </data>
+</odoo>
