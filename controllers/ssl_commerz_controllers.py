@@ -66,48 +66,51 @@ class SSLCommerzController(http.Controller):
         val_id = post.get('val_id')
         tx = None
 
-        if reference:
+        # if val_id:
 
-            tx_ids = request.env['payment.transaction'].search([('reference', '=', reference)])
+        #     tx_ids = request.env['payment.transaction'].search([('reference', '=', reference)])
 
-            if tx_ids:
-                tx = request.env['payment.transaction'].browse(tx_ids[0].id)
+        #     if tx_ids:
+        #         tx = request.env['payment.transaction'].browse(tx_ids[0].id)
         
-        if tx:
+        # if tx:
 
-            sslcommerz_urls = request.env['payment.acquirer']._get_sslcommerz_urls(tx and tx.acquirer_id and tx.acquirer_id.environment or 'prod')
-            validate_url = sslcommerz_urls['sslcommerz_validation_url']
+        sslcommerz_urls = request.env['payment.acquirer']._get_sslcommerz_urls(tx and tx.acquirer_id and tx.acquirer_id.environment or 'prod')
+        validate_url = sslcommerz_urls['sslcommerz_validation_url']
 
-        else:
-            _logger.warning('Sslcommerz: No order found')
-            return res
-
-        sid = tx.acquirer_id.moneris_email_account
-        key = tx.acquirer_id.moneris_seller_account
-        new_post = dict(ps_store_id=sid, hpp_key=key, transactionKey=post.get('transactionKey'))
+        # else:
+        #     _logger.warning('Sslcommerz: No order found')
+        #     return res
+        acquirer_id = request.env['payment.acquirer'].search([('id', '=', 14)])
+        store_id = acquirer_id.sslcommerz_store_id
+        store_passwd = acquirer_id.sslcommerz_store_passwd
+        new_post = dict(store_id=store_id, store_passwd=store_passwd, val_id=val_id)
         urequest = requests.post(validate_url, new_post)
         resp = urequest.text
-        part = resp.split('<br>')
-        new_response = dict([s.split(' = ') for s in part])
-        success = post.get('response_code')
+        # part = resp.split('<br>')
+        # new_response = dict([s.split(' = ') for s in part])
+        success = post.get('status')
         txn_key = ""
-        try:
-            if (int(success) < 50 and post.get('result') == '1' and
-                    new_response.get('response_code') is not 'null' and int(new_response.get('response_code')) < 50 and
-                    new_response.get('transactionKey') == post.get('transactionKey') and
-                    new_response.get('order_id') == post.get('response_order_id')
-                ):
-                _logger.info('Moneris: validated data')
-                res = request.env['payment.transaction'].sudo().form_feedback(post, 'moneris')
-                txn_key = post.get('transactionKey')
-            else:
-                res = 'Moneris: answered INVALID on data verification: ' + new_response.get('status') + '/' + post.get('response_order_id')
+        # try:
+        #     if (int(success) < 50 and post.get('result') == '1' and
+        #             new_response.get('response_code') is not 'null' and int(new_response.get('response_code')) < 50 and
+        #             new_response.get('transactionKey') == post.get('transactionKey') and
+        #             new_response.get('order_id') == post.get('response_order_id')
+        #         ):
+        #         _logger.info('Moneris: validated data')
+        #         res = request.env['payment.transaction'].sudo().form_feedback(post, 'moneris')
+        #         txn_key = post.get('transactionKey')
+        #     else:
+        #         res = 'Moneris: answered INVALID on data verification: ' + new_response.get('status') + '/' + post.get('response_order_id')
 
-        except ValueError:
-            res = 'Moneris: answered INVALID on data verification: ' + new_response.get('status') + '/' + post.get('response_order_id')
+        # except ValueError:
+        #     res = 'Moneris: answered INVALID on data verification: ' + new_response.get('status') + '/' + post.get('response_order_id')
 
-        if txn_key != "":
-            res = "status=approved&transactionKey={}".format(txn_key)
+        # if txn_key != "":
+        #     res = "status=approved&transactionKey={}".format(txn_key)
+        res = ''
+        if success:
+            res = "status={}".format(success)
         return res
 
     @http.route('/payment/sslcommerz/ipn/', type='http', auth='none', methods=['POST'], csrf=False)
@@ -126,7 +129,7 @@ class SSLCommerzController(http.Controller):
         _logger.info('****************************** /success')
         return_url = self._get_return_url(**post)
 
-        if self.moneris_validate_data(**post):
+        if self.sslcommerz_validate_data(**post):
             return werkzeug.utils.redirect(return_url)
         else:
             return werkzeug.utils.redirect(self._cancel_url)

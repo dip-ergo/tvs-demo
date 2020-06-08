@@ -65,7 +65,7 @@ class PaymentAcquirerSSLCommerz(models.Model):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # print('values ===> ', values)
         sslcommerz_tx_values = dict(values)
-        sslcommerz_tx_final_values = dict(values)
+        # sslcommerz_tx_final_values = dict(values)
         sslcommerz_tx_values.update({
             'store_passwd': str(self.sslcommerz_store_passwd),
             # 'business': self.moneris_email_account,
@@ -245,7 +245,7 @@ class TxSslcommerz(models.Model):
             values.update(render_values)
         # Not very elegant to do that here but no choice regarding the design.
         self._log_payment_transaction_sent()
-        if self.acquirer_id.id == 13:
+        if self.acquirer_id.id == 14:
             return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
                 self.reference,
                 order.amount_total,
