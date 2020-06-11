@@ -10,7 +10,7 @@ from odoo import http
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.http import request
 from odoo import SUPERUSER_ID
-from sslcommerz_python.payment import SSLCSession
+# from sslcommerz_python.payment import SSLCSession
 from decimal import Decimal
 from odoo.addons.payment.controllers.portal import PaymentProcessing
 
