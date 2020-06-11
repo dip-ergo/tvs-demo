@@ -16,7 +16,6 @@
 
     # any module necessary for this one to work correctly
     'depends' : ['payment'],
-    'external_dependencies': {'python': ['sslcommerz-python']},
 
     # always loaded
     'data': [
