@@ -12,7 +12,7 @@
     'author': "Ergo Ventures Ltd",
     'website': "http://www.ergo-ventures.com",
     'category': 'Accounting/Payment',
-    'version': '2.0',
+    'version': '3.0',
 
     # any module necessary for this one to work correctly
     'depends' : ['payment'],
